@@ -1,15 +1,16 @@
 import React, { memo } from 'react';
 
 const button = props => {
+    const { title, isActive, onClick, link } = props;
     return (
         <>
             <li>
                 <a
-                    href="#"
-                    className={"selected"}
-                    onClick={() => {}}
+                    href={link}
+                    className={isActive ? "selected" : ""}
+                    onClick={onClick}
                 >
-                    All
+                    {title}
                 </a>
             </li>
             <span></span>
