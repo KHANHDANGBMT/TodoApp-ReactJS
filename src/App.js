@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 
-import Aux from './hoc/Auxiliary';
+// Components
+import Header from './Components/Header/Header';
+import TodoList from './Components/Todo/TodoList';
+import Option from './Components/Option/Option';
+
+// import css
+import './Css/Todo.css';
 import './App.css';
 
 class App extends Component { 
   render() {
     return (
-      <Aux>
-        
-      </Aux>
+      <div className="todoapp">
+        <Header />
+        <TodoList />
+        <Option/>
+      </div>
     );
   }
 }
