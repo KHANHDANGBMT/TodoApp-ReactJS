@@ -22,21 +22,41 @@ class App extends PureComponent {
         text: 'todo 1',
         isCompleted: true
       }
-    ]
+    ],
+    todoEditingId: ''
   }
 
   addTodo = ((todo = {}) => {
     this.setState(prevState => ({
       todoList: [...prevState.todoList, todo]
     }))
-  })
+  });
+
+  getTodoEditingId = (id = '') => {
+    this.setState({
+      todoEditingId: id
+    })
+  }
+
+  onEditedTodo = (todo = {}, index = -1) => {
+    if (index >= 0) {
+      const { todoList: list } = this.state;
+      list.splice(index, 1, todo);
+      this.setState({ todoList: list, todoEditingId: '' });
+    }
+  }
 
   render() {
-    const { todoList } = this.state;
+    const { todoList, todoEditingId } = this.state;
     return (
       <div className="todoapp">
         <Header addTodo={this.addTodo}/>
-        <TodoList todoList={todoList}/>
+        <TodoList
+          todoList={todoList}
+          getTodoEditingId={this.getTodoEditingId}
+          todoEditingId={todoEditingId}
+          onEditedTodo={this.onEditedTodo}
+        />
         <Option/>
       </div>
     );
