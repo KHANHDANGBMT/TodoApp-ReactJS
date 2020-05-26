@@ -46,6 +46,14 @@ class App extends PureComponent {
     }
   }
 
+  markCompletedTodo = (id = '') => {
+    const { todoList } = this.state;
+    const newTodoList = todoList.map(todo => (todo.id === id) ? { ...todo, isCompleted: !todo.isCompleted } : { ...todo });
+    this.setState({
+      todoList: newTodoList
+    })
+  }
+
   render() {
     const { todoList, todoEditingId } = this.state;
     return (
@@ -56,6 +64,7 @@ class App extends PureComponent {
           getTodoEditingId={this.getTodoEditingId}
           todoEditingId={todoEditingId}
           onEditedTodo={this.onEditedTodo}
+          markCompletedTodo={this.markCompletedTodo}
         />
         <Option/>
       </div>
