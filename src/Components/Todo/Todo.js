@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 
 const Todo = props => {
-  const { todo, getTodoEditingId, todoEditingId, onEditedTodo, index } = props;
+  const { todo, getTodoEditingId, todoEditingId, onEditedTodo, index, markCompletedTodo } = props;
   const [text, setText] = useState(todo.text);
   const isEditing = todoEditingId === todo.id;
   const editTodo = () => {
@@ -14,7 +14,12 @@ const Todo = props => {
     <li className={`${isEditing ? 'editing' : ''} ${todo.isCompleted ? 'completed' : ''}`}>
       {
         !isEditing ? <div className="view">
-          <input className="toggle" type="checkbox" checked={todo.isCompleted} />
+          <input
+            className="toggle"
+            type="checkbox"
+            checked={todo.isCompleted}
+            onChange={() => markCompletedTodo(todo.id)}
+          />
           <label onDoubleClick={() => getTodoEditingId(todo.id)}>{todo.text}</label>
           <button className="destroy" />
         </div> :
