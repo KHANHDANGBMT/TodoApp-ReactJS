@@ -6,7 +6,7 @@ const button = props => {
         <>
             <li>
                 <a
-                    href={link}
+                    href={`#/${link}`}
                     className={isActive ? "selected" : ""}
                     onClick={onClick}
                 >

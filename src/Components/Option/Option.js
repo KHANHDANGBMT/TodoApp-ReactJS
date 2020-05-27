@@ -3,21 +3,22 @@ import React, { memo } from 'react';
 import Button from './Button';
 
 const option = props => {
+    const { status, setStatusFilter, clearCompleted } = props;
     const filterBtns = [
         {
             title: "All",
-            isActive: true,
-            onClick: () => { },
+            isActive: status === "ALL",
+            onClick: () => setStatusFilter('ALL'),
             link: ''
         }, {
             title: "Active",
-            isActive: false,
-            onClick: () => { },
+            isActive: status === "ACTIVE",
+            onClick: () => setStatusFilter('ACTIVE'),
             link: 'active'
         }, {
             title: "Completed",
-            isActive: false,
-            onClick: () => { },
+            isActive: status === "COMPLETED",
+            onClick: () => setStatusFilter('COMPLETED'),
             link: 'completed'
         }
     ]
@@ -32,11 +33,11 @@ const option = props => {
             <ul className="filters">
                 {
                     filterBtns.map(btn => (
-                        <Button key={`btn${btn.title}`} {...btn}/>
+                        <Button key={`btn${btn.title}`} {...btn} />
                     ))
                 }
             </ul>
-            <button className="clear-completed">Clear-completed</button>
+            <button className="clear-completed" onClick={() => clearCompleted()}>Clear-completed</button>
         </div>
     );
 }

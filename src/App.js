@@ -9,6 +9,20 @@ import Option from './Components/Option/Option';
 import './Css/Todo.css';
 import './App.css';
 
+const isNotCheckedAll = (todos = []) => todos.find(todo => !todo.isCompleted);
+
+const filterByStatus = (todos = [], status = '', id = '' ) => {
+  switch (status) {
+    case 'ACTIVE':
+      return todos.filter(todo => !todo.isCompleted);
+    case 'COMPLETED':
+      return todos.filter(todo => todo.isCompleted);
+    case 'REMOVE':
+      return todos.filter(todo => todo.id !== id);
+    default:
+      return todos;
+  }
+}
 class App extends PureComponent { 
   state = {
     todoList: [
@@ -23,7 +37,15 @@ class App extends PureComponent {
         isCompleted: true
       }
     ],
-    todoEditingId: ''
+    todoEditingId: '',
+    isCheckedAll: false,
+    status: 'ALL'
+  }
+
+  componentWillMount() {
+    this.setState({
+      isCheckedAll: !isNotCheckedAll(this.state.todoList)
+    })
   }
 
   addTodo = ((todo = {}) => {
@@ -48,25 +70,66 @@ class App extends PureComponent {
 
   markCompletedTodo = (id = '') => {
     const { todoList } = this.state;
-    const newTodoList = todoList.map(todo => (todo.id === id) ? { ...todo, isCompleted: !todo.isCompleted } : { ...todo });
+    const updateTodoList = todoList.map(todo => (todo.id === id) ? { ...todo, isCompleted: !todo.isCompleted } : { ...todo });
     this.setState({
-      todoList: newTodoList
+      todoList: updateTodoList,
+      isCheckedAll: !isNotCheckedAll(updateTodoList)
+    })
+  }
+
+  checkAllTodos = () => {
+    const { todoList, isCheckedAll } = this.state;
+    this.setState(prevState => ({
+      todoList: todoList.map(todo => ({
+        ...todo,
+        isCompleted: !isCheckedAll
+      })),
+      isCheckedAll: !prevState.isCheckedAll
+    }))
+  }
+
+  setStatusFilter = (status = '') => {
+    this.setState({
+      status
+    })
+  }
+
+  removeTodo = (id = '') => {
+    const {todoList} = this.state
+    this.setState({
+      todoList: filterByStatus(todoList, "REMOVE", id)
+    })
+  }
+
+  clearCompleted = () => {
+    const { todoList } = this.state
+    this.setState({
+      todoList: filterByStatus(todoList, "ACTIVE")
     })
   }
 
   render() {
-    const { todoList, todoEditingId } = this.state;
+    const { todoList, todoEditingId, isCheckedAll, status } = this.state;
     return (
       <div className="todoapp">
-        <Header addTodo={this.addTodo}/>
+        <Header
+          addTodo={this.addTodo}
+        />
         <TodoList
-          todoList={todoList}
+          todoList={filterByStatus(todoList, status)}
           getTodoEditingId={this.getTodoEditingId}
           todoEditingId={todoEditingId}
           onEditedTodo={this.onEditedTodo}
           markCompletedTodo={this.markCompletedTodo}
+          isCheckedAll={isCheckedAll}
+          checkAllTodos={this.checkAllTodos}
+          removeTodo={this.removeTodo}
         />
-        <Option/>
+        <Option
+          setStatusFilter={this.setStatusFilter}
+          status={status}
+          clearCompleted={this.clearCompleted}
+        />
       </div>
     );
   }
