@@ -11,7 +11,7 @@ import './App.css';
 
 const isNotCheckedAll = (todos = []) => todos.find(todo => !todo.isCompleted);
 
-const filterByStatus = (todos = [], status = '', id = '' ) => {
+const filterByStatus = (todos = [], status = '', id = '') => {
   switch (status) {
     case 'ACTIVE':
       return todos.filter(todo => !todo.isCompleted);
@@ -23,32 +23,25 @@ const filterByStatus = (todos = [], status = '', id = '' ) => {
       return todos;
   }
 }
-class App extends PureComponent { 
+class App extends PureComponent {
   state = {
-    todoList: [
-      {
-        id: 1,
-        text: 'todo 1',
-        isCompleted: false
-      },
-      {
-        id: 2,
-        text: 'todo 1',
-        isCompleted: true
-      }
-    ],
+    todoList: [],
     todoEditingId: '',
     isCheckedAll: false,
-    status: 'ALL'
+    status: 'ALL',
+    itemLeft: 0,
+    shouldShowClearCompleted: false
   }
 
   componentWillMount() {
     this.setState({
-      isCheckedAll: !isNotCheckedAll(this.state.todoList)
+      isCheckedAll: isNotCheckedAll(this.state.todoList)
     })
   }
 
   addTodo = ((todo = {}) => {
+    const todos = [...this.state.todoList, todo];
+    this.countItemLeft(todos);
     this.setState(prevState => ({
       todoList: [...prevState.todoList, todo]
     }))
@@ -70,7 +63,10 @@ class App extends PureComponent {
 
   markCompletedTodo = (id = '') => {
     const { todoList } = this.state;
-    const updateTodoList = todoList.map(todo => (todo.id === id) ? { ...todo, isCompleted: !todo.isCompleted } : { ...todo });
+    const updateTodoList = todoList.map(todo => (todo.id === id)
+      ? { ...todo, isCompleted: !todo.isCompleted }
+      : { ...todo });
+    this.countItemLeft(updateTodoList);
     this.setState({
       todoList: updateTodoList,
       isCheckedAll: !isNotCheckedAll(updateTodoList)
@@ -79,11 +75,13 @@ class App extends PureComponent {
 
   checkAllTodos = () => {
     const { todoList, isCheckedAll } = this.state;
+    const todos = todoList.map(todo => ({
+      ...todo,
+      isCompleted: !isCheckedAll
+    }));
+    this.countItemLeft(todos);
     this.setState(prevState => ({
-      todoList: todoList.map(todo => ({
-        ...todo,
-        isCompleted: !isCheckedAll
-      })),
+      todoList: todos,
       isCheckedAll: !prevState.isCheckedAll
     }))
   }
@@ -95,7 +93,7 @@ class App extends PureComponent {
   }
 
   removeTodo = (id = '') => {
-    const {todoList} = this.state
+    const { todoList } = this.state
     this.setState({
       todoList: filterByStatus(todoList, "REMOVE", id)
     })
@@ -108,8 +106,23 @@ class App extends PureComponent {
     })
   }
 
+  countItemLeft = (todoList = []) => {
+    const todos = filterByStatus(todoList, "ACTIVE");
+    console.log(todos.length);
+    this.setState({
+      itemLeft: todos.length
+    })
+  }
+
   render() {
     const { todoList, todoEditingId, isCheckedAll, status } = this.state;
+    const showOption = todoList.length !== 0 ? <Option
+      setStatusFilter={this.setStatusFilter}
+      status={status}
+      clearCompleted={this.clearCompleted}
+      shouldShowClearCompleted={this.state.shouldShowClearCompleted}
+      itemLeft={this.state.itemLeft}
+    /> : '';
     return (
       <div className="todoapp">
         <Header
@@ -125,11 +138,8 @@ class App extends PureComponent {
           checkAllTodos={this.checkAllTodos}
           removeTodo={this.removeTodo}
         />
-        <Option
-          setStatusFilter={this.setStatusFilter}
-          status={status}
-          clearCompleted={this.clearCompleted}
-        />
+        {showOption}
+
       </div>
     );
   }

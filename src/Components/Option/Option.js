@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import Button from './Button';
 
 const option = props => {
-    const { status, setStatusFilter, clearCompleted } = props;
+    const { status, setStatusFilter, clearCompleted, itemLeft, shouldShowClearCompleted } = props;
     const filterBtns = [
         {
             title: "All",
@@ -21,13 +21,15 @@ const option = props => {
             onClick: () => setStatusFilter('COMPLETED'),
             link: 'completed'
         }
-    ]
+    ];
+
+    const showClear = shouldShowClearCompleted ? <button className="clear-completed" onClick={() => clearCompleted()}>Clear Completed</button> : '';
     return (
         <div className="footer">
             <span className="todo-count">
-                <strong>2</strong>
-                <span></span>
-                <span>item</span>
+                <strong>{itemLeft}</strong>
+                <span> </span>
+                <span>Item </span>
                 <span>left</span>
             </span>
             <ul className="filters">
@@ -37,7 +39,7 @@ const option = props => {
                     ))
                 }
             </ul>
-            <button className="clear-completed" onClick={() => clearCompleted()}>Clear-completed</button>
+            {showClear}
         </div>
     );
 }
