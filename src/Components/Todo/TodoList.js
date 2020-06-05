@@ -7,7 +7,8 @@ const todoLists = props => {
   return (
     <section className="main">
       <input className="toggle-all" type="checkbox"
-        checked={isCheckedAll} />
+        onChange={()=>checkAllTodos()}
+        checked={!!isCheckedAll} value=""/>
       <label
         htmlFor="toggle-all"
         onClick={checkAllTodos}

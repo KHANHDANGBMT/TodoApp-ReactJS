@@ -1,0 +1,9 @@
+{
+    "actions": {
+        "active": "ACTIVE",
+        "completed": "COMPLETED",
+        "remove": "REMOVE",
+        "all": "ALL"
+    }
+}
+    
