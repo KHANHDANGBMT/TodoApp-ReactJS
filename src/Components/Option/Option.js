@@ -1,33 +1,38 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
+
 
 import Button from "./Button";
+import { connect } from 'react-redux';
+import { setStatusFilter, countItemLeft, clearCompleted } from '../../store/actions/index';
 
-const Helper = require('../Helper/Action/Action.json');
+import * as Helper from '../Helper/Helper';
+const Actions = require('../Helper/Action/Action.json');
 
 const Option = (props) => {
   const {
     status,
     setStatusFilter,
     clearCompleted,
-    itemLeft
+    todoList
   } = props;
+  let itemLeft = Helper.filterByStatus(todoList, Actions.actions.active).length;
   const filterBtns = [
     {
-      title: Helper.actions.all,
-      isActive: status === Helper.actions.all,
-      onClick: () => setStatusFilter(Helper.actions.all),
+      title: Actions.actions.all,
+      isActive: status === Actions.actions.all,
+      onClick: () => setStatusFilter(Actions.actions.all),
       link: "",
     },
     {
-      title: Helper.actions.active,
-      isActive: status === Helper.actions.active,
-      onClick: () => setStatusFilter(Helper.actions.active),
+      title: Actions.actions.active,
+      isActive: status === Actions.actions.active,
+      onClick: () => setStatusFilter(Actions.actions.active),
       link: "active",
     },
     {
-      title: Helper.actions.completed,
-      isActive: status === Helper.actions.completed,
-      onClick: () => setStatusFilter(Helper.actions.completed),
+      title: Actions.actions.completed,
+      isActive: status === Actions.actions.completed,
+      onClick: () => setStatusFilter(Actions.actions.completed),
       link: "completed",
     },
   ];
@@ -51,4 +56,16 @@ const Option = (props) => {
   );
 };
 
-export default memo(Option);
+const mapStateToProps = (state) => {
+  return {
+    status: state.todos.status,
+    todoList: state.todos.todoList
+  }
+}
+
+const mapDispatchToProps = {
+  setStatusFilter,
+  clearCompleted,
+};
+
+export default (connect(mapStateToProps, mapDispatchToProps)(Option));
