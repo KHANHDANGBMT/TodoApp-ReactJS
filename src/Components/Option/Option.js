@@ -18,19 +18,19 @@ const Option = (props) => {
   let itemLeft = Helper.filterByStatus(todoList, Actions.actions.active).length;
   const filterBtns = [
     {
-      title: Actions.actions.all,
+      title: Actions.actionsDisplay.all,
       isActive: status === Actions.actions.all,
       onClick: () => setStatusFilter(Actions.actions.all),
       link: "",
     },
     {
-      title: Actions.actions.active,
+      title: Actions.actionsDisplay.active,
       isActive: status === Actions.actions.active,
       onClick: () => setStatusFilter(Actions.actions.active),
       link: "active",
     },
     {
-      title: Actions.actions.completed,
+      title: Actions.actionsDisplay.completed,
       isActive: status === Actions.actions.completed,
       onClick: () => setStatusFilter(Actions.actions.completed),
       link: "completed",

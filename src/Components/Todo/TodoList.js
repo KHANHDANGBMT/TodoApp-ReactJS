@@ -7,15 +7,18 @@ import * as Helper from '../Helper/Helper';
 const todoLists = props => {
   const { todoList, isCheckedAll, checkAllTodos, status } = props;
   const todoLists = Helper.filterByStatus(todoList, status);
+  const displaySelectAll = todoList.length >= 1 ? true : false;
   return (
     <section className="main">
       <input className="toggle-all" type="checkbox"
         onChange={()=>checkAllTodos()}
         checked={!!isCheckedAll} value=""/>
-      <label
+      {
+        displaySelectAll ? <label
         htmlFor="toggle-all"
         onClick={checkAllTodos}
-      ></label>
+      ></label> : ''
+      }
       <ul className="todo-list">
         {
           todoLists.map((todo, index) => {

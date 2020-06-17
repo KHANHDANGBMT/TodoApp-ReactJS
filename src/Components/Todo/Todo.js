@@ -27,6 +27,11 @@ const Todo = (props) => {
     }
   }, [arr]);
   const editTodo = () => {
+    if (text.trim() === '') {
+      removeTodo(todo.id);
+      console.log(text)
+      return
+    }
     onEditTodo(
       {
         ...todo,

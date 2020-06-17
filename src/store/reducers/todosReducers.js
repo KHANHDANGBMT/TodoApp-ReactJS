@@ -64,6 +64,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
           Actions.actions.remove,
           action.id
         ),
+        isCheckedAll: todoList.length >= 1 ? false : true
       });
     case SET_STATUS_FILTER:
       return Object.assign({}, state, {

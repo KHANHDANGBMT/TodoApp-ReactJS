@@ -4,6 +4,11 @@
         "completed": "COMPLETED",
         "remove": "REMOVE",
         "all": "ALL"
+    },
+    "actionsDisplay": {
+        "active": "Active",
+        "completed": "Completed",
+        "all": "All"
     }
 }
     
