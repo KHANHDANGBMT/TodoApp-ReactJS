@@ -1,22 +1,21 @@
-import React, { memo, useEffect } from "react";
-
+import React, { memo } from "react";
 
 import Button from "./Button";
 import { connect } from 'react-redux';
-import { setStatusFilter, countItemLeft, clearCompleted } from '../../store/actions/index';
+import { setStatusFilter, clearCompleted } from '../../store/actions';
 
 import * as Helper from '../Helper/Helper';
-const Actions = require('../Helper/Action/Action.json');
+import * as Actions from '../Helper/Actions/TodoHelper';
 
-const Option = (props) => {
+const todoOption = (props) => {
   const {
     status,
     setStatusFilter,
     clearCompleted,
     todoList
   } = props;
-  let itemLeft = Helper.filterByStatus(todoList, Actions.actions.active).length;
-  const filterBtns = [
+  let itemLeft = Helper.filterTodosByStatus(todoList, Actions.actions.active).length;
+  const filterBtnConfigs = [
     {
       title: Actions.actionsDisplay.all,
       isActive: status === Actions.actions.all,
@@ -45,7 +44,7 @@ const Option = (props) => {
         <span>left</span>
       </span>
       <ul className="filters">
-        {filterBtns.map((btn) => (
+        {filterBtnConfigs.map((btn) => (
           <Button key={`btn${btn.title}`} {...btn} />
         ))}
       </ul>
@@ -68,4 +67,4 @@ const mapDispatchToProps = {
   clearCompleted,
 };
 
-export default (connect(mapStateToProps, mapDispatchToProps)(Option));
+export default memo(connect(mapStateToProps, mapDispatchToProps)(todoOption));

@@ -1,5 +1,5 @@
-const Actions = require('./Action/Action.json'); 
-export const filterByStatus = (todos = [], status = '', id = '') => {
+import * as Actions from './Actions/TodoHelper';
+export const filterTodosByStatus = (todos = [], status = '', id = '') => {
     switch (status) {
         case Actions.actions.active:
             return todos.filter(todo => !todo.isCompleted);

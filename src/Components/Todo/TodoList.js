@@ -6,7 +6,7 @@ import * as Helper from '../Helper/Helper';
 
 const todoLists = props => {
   const { todoList, isCheckedAll, checkAllTodos, status } = props;
-  const todoLists = Helper.filterByStatus(todoList, status);
+  const todoLists = Helper.filterTodosByStatus(todoList, status);
   const displaySelectAll = todoList.length >= 1 ? true : false;
   return (
     <section className="main">

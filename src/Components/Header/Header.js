@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { connect } from 'react-redux';
-import { addTodo } from '../../store/actions/index';
+import { addTodo } from '../../store/actions';
 
 const Header = props => {
     const [text, setText] = useState('');
