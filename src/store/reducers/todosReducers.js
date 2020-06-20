@@ -10,7 +10,7 @@ import {
 } from "../actions/index";
 import * as Helper from "../../Components/Helper/Helper";
 
-const Actions = require("../../Components/Helper/Action/Action.json");
+import * as Actions from '../../Components/Helper/Actions/TodoHelper';
 
 const INITIAL_STATE = {
   todoList: [],
@@ -59,11 +59,12 @@ const todoReducers = (state = INITIAL_STATE, action) => {
       });
     case REMOVE_TODO:
       return Object.assign({}, state, {
-        todoList: Helper.filterByStatus(
+        todoList: Helper.filterTodosByStatus(
           list,
           Actions.actions.remove,
           action.id
         ),
+        isCheckedAll: todoList.length >= 1 ? false : true
       });
     case SET_STATUS_FILTER:
       return Object.assign({}, state, {
@@ -71,7 +72,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
       });
     case CLEAR_COMPLETED:
       return Object.assign({}, state, {
-        todoList: Helper.filterByStatus(list, Actions.actions.active),
+        todoList: Helper.filterTodosByStatus(list, Actions.actions.active),
         isCheckedAll: false
       });
     default:

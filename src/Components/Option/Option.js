@@ -1,36 +1,35 @@
-import React, { memo, useEffect } from "react";
-
+import React, { memo } from "react";
 
 import Button from "./Button";
 import { connect } from 'react-redux';
-import { setStatusFilter, countItemLeft, clearCompleted } from '../../store/actions/index';
+import { setStatusFilter, clearCompleted } from '../../store/actions';
 
 import * as Helper from '../Helper/Helper';
-const Actions = require('../Helper/Action/Action.json');
+import * as Actions from '../Helper/Actions/TodoHelper';
 
-const Option = (props) => {
+const todoOption = (props) => {
   const {
     status,
     setStatusFilter,
     clearCompleted,
     todoList
   } = props;
-  let itemLeft = Helper.filterByStatus(todoList, Actions.actions.active).length;
-  const filterBtns = [
+  let itemLeft = Helper.filterTodosByStatus(todoList, Actions.actions.active).length;
+  const filterBtnConfigs = [
     {
-      title: Actions.actions.all,
+      title: Actions.actionsDisplay.all,
       isActive: status === Actions.actions.all,
       onClick: () => setStatusFilter(Actions.actions.all),
       link: "",
     },
     {
-      title: Actions.actions.active,
+      title: Actions.actionsDisplay.active,
       isActive: status === Actions.actions.active,
       onClick: () => setStatusFilter(Actions.actions.active),
       link: "active",
     },
     {
-      title: Actions.actions.completed,
+      title: Actions.actionsDisplay.completed,
       isActive: status === Actions.actions.completed,
       onClick: () => setStatusFilter(Actions.actions.completed),
       link: "completed",
@@ -45,7 +44,7 @@ const Option = (props) => {
         <span>left</span>
       </span>
       <ul className="filters">
-        {filterBtns.map((btn) => (
+        {filterBtnConfigs.map((btn) => (
           <Button key={`btn${btn.title}`} {...btn} />
         ))}
       </ul>
@@ -68,4 +67,4 @@ const mapDispatchToProps = {
   clearCompleted,
 };
 
-export default (connect(mapStateToProps, mapDispatchToProps)(Option));
+export default memo(connect(mapStateToProps, mapDispatchToProps)(todoOption));

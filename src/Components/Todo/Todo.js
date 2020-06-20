@@ -1,11 +1,11 @@
 import React, { memo, useState, useRef, useEffect } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   getTodoEditingId,
   onEditTodo,
   markCompletedTodo,
-  removeTodo
-} from '../../store/actions/index';
+  removeTodo,
+} from "../../store/actions";
 
 const Todo = (props) => {
   const clickInput = useRef(null);
@@ -20,13 +20,16 @@ const Todo = (props) => {
   } = props;
   const [text, setText] = useState(todo.text);
   const isEditing = todoEditingId === todo.id;
-  const arr = [1,2];
   useEffect(() => {
     if (isEditing) {
       clickInput.current.focus();
     }
-  }, [arr]);
+  });
   const editTodo = () => {
+    if (text.trim() === "") {
+      removeTodo(todo.id);
+      return;
+    }
     onEditTodo(
       {
         ...todo,
@@ -77,15 +80,15 @@ const Todo = (props) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     todoEditingId: state.todos.todoEditingId,
-    ...ownProps
-  }
-}
+    ...ownProps,
+  };
+};
 
 const mapDispatchToProps = {
   getTodoEditingId,
   onEditTodo,
   markCompletedTodo,
-  removeTodo
+  removeTodo,
 };
 
 export default memo(connect(mapStateToProps, mapDispatchToProps)(Todo));
