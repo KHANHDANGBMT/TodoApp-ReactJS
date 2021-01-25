@@ -1,47 +1,70 @@
-import React, { memo } from 'react';
+import React, { memo } from "react";
 
-import Button from './Button';
+import Button from "./Button";
+import { connect } from 'react-redux';
+import { setStatusFilter, clearCompleted } from '../../store/actions';
 
-const option = props => {
-    const { status, setStatusFilter, clearCompleted, itemLeft, shouldShowClearCompleted } = props;
-    const filterBtns = [
-        {
-            title: "All",
-            isActive: status === "ALL",
-            onClick: () => setStatusFilter('ALL'),
-            link: ''
-        }, {
-            title: "Active",
-            isActive: status === "ACTIVE",
-            onClick: () => setStatusFilter('ACTIVE'),
-            link: 'active'
-        }, {
-            title: "Completed",
-            isActive: status === "COMPLETED",
-            onClick: () => setStatusFilter('COMPLETED'),
-            link: 'completed'
-        }
-    ];
+import * as Helper from '../Helper/Helper';
+import * as Actions from '../Helper/Actions/TodoHelper';
 
-    const showClear = shouldShowClearCompleted ? <button className="clear-completed" onClick={() => clearCompleted()}>Clear Completed</button> : '';
-    return (
-        <div className="footer">
-            <span className="todo-count">
-                <strong>{itemLeft}</strong>
-                <span> </span>
-                <span>Item </span>
-                <span>left</span>
-            </span>
-            <ul className="filters">
-                {
-                    filterBtns.map(btn => (
-                        <Button key={`btn${btn.title}`} {...btn} />
-                    ))
-                }
-            </ul>
-            {showClear}
-        </div>
-    );
+const todoOption = (props) => {
+  const {
+    status,
+    setStatusFilter,
+    clearCompleted,
+    todoList
+  } = props;
+  let itemLeft = Helper.filterTodosByStatus(todoList, Actions.actions.active).length;
+  const filterBtnConfigs = [
+    {
+      title: Actions.actionsDisplay.all,
+      isActive: status === Actions.actions.all,
+      onClick: () => setStatusFilter(Actions.actions.all),
+      link: "",
+    },
+    {
+      title: Actions.actionsDisplay.active,
+      isActive: status === Actions.actions.active,
+      onClick: () => setStatusFilter(Actions.actions.active),
+      link: "active",
+    },
+    {
+      title: Actions.actionsDisplay.completed,
+      isActive: status === Actions.actions.completed,
+      onClick: () => setStatusFilter(Actions.actions.completed),
+      link: "completed",
+    },
+  ];
+  return (
+    <div className="footer">
+      <span className="todo-count">
+        <strong>{itemLeft}</strong>
+        <span> </span>
+        <span>Item </span>
+        <span>left</span>
+      </span>
+      <ul className="filters">
+        {filterBtnConfigs.map((btn) => (
+          <Button key={`btn${btn.title}`} {...btn} />
+        ))}
+      </ul>
+      <button className="clear-completed" onClick={() => clearCompleted()}>
+        Clear Completed
+      </button>
+    </div>
+  );
+};
+
+const mapStateToProps = (state) => {
+  return {
+    status: state.todos.status,
+    todoList: state.todos.todoList
+  }
 }
 
-export default memo(option);
+const mapDispatchToProps = {
+  setStatusFilter,
+  clearCompleted,
+};
+
+export default memo(connect(mapStateToProps, mapDispatchToProps)(todoOption));
