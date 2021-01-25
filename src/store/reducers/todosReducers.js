@@ -39,6 +39,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, {
         todoEditingId: action.id,
       });
+    
     case MARK_COMPLETED_TODO:
       const updateTodoList = list.map((todo) =>
         todo.id === action.id
@@ -49,6 +50,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         todoList: updateTodoList,
         isCheckedAll: !Helper.isNotCheckedAll(updateTodoList),
       });
+    
     case CHECK_ALL_TODOS:
       return Object.assign({}, state, {
         todoList: todoList.map((todo) => ({
@@ -57,6 +59,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         })),
         isCheckedAll: !isCheckedAll,
       });
+    
     case REMOVE_TODO:
       return Object.assign({}, state, {
         todoList: Helper.filterTodosByStatus(
@@ -66,10 +69,12 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         ),
         isCheckedAll: todoList.length >= 1 ? false : true
       });
+    
     case SET_STATUS_FILTER:
       return Object.assign({}, state, {
         status: action.status,
       });
+    
     case CLEAR_COMPLETED:
       return Object.assign({}, state, {
         todoList: Helper.filterTodosByStatus(list, Actions.actions.active),

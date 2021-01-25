@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Todo from "./Todo";
 import { checkAllTodos } from "../../store/actions/index";
-import * as Helper from "../Helper/Helper";
+import * as Helper from "../../Helper/Helper";
 
 const todoLists = (props) => {
   const { todoList, isCheckedAll, checkAllTodos, status } = props;
