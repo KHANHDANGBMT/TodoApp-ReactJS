@@ -8,9 +8,9 @@ import {
   SET_STATUS_FILTER,
   CLEAR_COMPLETED,
 } from "../actions/index";
-import * as Helper from "../../Components/Helper/Helper";
+import * as Helper from "../../Helper/Helper";
 
-import * as Actions from '../../Components/Helper/Actions/TodoHelper';
+import * as Actions from '../../Helper/Actions/TodoHelper';
 
 const INITIAL_STATE = {
   todoList: [],

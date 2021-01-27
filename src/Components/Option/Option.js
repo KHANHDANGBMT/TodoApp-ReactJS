@@ -4,8 +4,8 @@ import Button from "./Button";
 import { connect } from 'react-redux';
 import { setStatusFilter, clearCompleted } from '../../store/actions';
 
-import * as Helper from '../Helper/Helper';
-import * as Actions from '../Helper/Actions/TodoHelper';
+import * as Helper from '../../Helper/Helper';
+import * as Actions from '../../Helper/Actions/TodoHelper';
 
 const todoOption = (props) => {
   const {
