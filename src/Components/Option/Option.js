@@ -1,20 +1,22 @@
 import React, { memo } from "react";
 
 import Button from "./Button";
-import { connect } from 'react-redux';
-import { setStatusFilter, clearCompleted } from '../../store/actions';
+import { connect } from "react-redux";
+import { setStatusFilter, clearCompletedTodo } from "../../store/actions";
 
-import * as Helper from '../../Helper/Helper';
-import * as Actions from '../../Helper/Actions/TodoHelper';
+import * as Helper from "../../Helper/Helper";
+import * as Actions from "../../Helper/Actions/TodoHelper";
 
 const todoOption = (props) => {
   const {
     status,
     setStatusFilter,
-    clearCompleted,
-    todoList
+    clearCompletedTodo,
+    todoList,
+    isCheckedAll,
   } = props;
-  let itemLeft = Helper.filterTodosByStatus(todoList, Actions.actions.active).length;
+  let itemLeft = Helper.filterTodosByStatus(todoList, Actions.actions.active)
+    .length;
   const filterBtnConfigs = [
     {
       title: Actions.actionsDisplay.all,
@@ -48,9 +50,16 @@ const todoOption = (props) => {
           <Button key={`btn${btn.title}`} {...btn} />
         ))}
       </ul>
-      <button className="clear-completed" onClick={() => clearCompleted()}>
-        Clear Completed
-      </button>
+      {isCheckedAll || status === Actions.actions.completed ? (
+        <button
+          className="clear-completed"
+          onClick={() => clearCompletedTodo()}
+        >
+          Clear Completed
+        </button>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
@@ -58,13 +67,16 @@ const todoOption = (props) => {
 const mapStateToProps = (state) => {
   return {
     status: state.todos.status,
-    todoList: state.todos.todoList
-  }
-}
+    todoList: state.todos.todoList,
+    isCheckedAll: state.todos.isCheckedAll,
+  };
+};
 
-const mapDispatchToProps = {
-  setStatusFilter,
-  clearCompleted,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    clearCompletedTodo: () => dispatch(clearCompletedTodo()),
+    setStatusFilter: (status) => dispatch(setStatusFilter(status)),
+  };
 };
 
 export default memo(connect(mapStateToProps, mapDispatchToProps)(todoOption));

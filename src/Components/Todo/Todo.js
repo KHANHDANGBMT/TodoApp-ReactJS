@@ -5,6 +5,9 @@ import {
   onEditTodo,
   markCompletedTodo,
   removeTodo,
+  updateOneTodo,
+  getTodo,
+  deleteOneTodo,
 } from "../../store/actions";
 
 const Todo = (props) => {
@@ -17,6 +20,10 @@ const Todo = (props) => {
     index,
     markCompletedTodo,
     removeTodo,
+    updateOneTodo,
+    getTodo,
+    setIsRender,
+    deleteOneTodo,
   } = props;
   const [text, setText] = useState(todo.text);
   const isEditing = todoEditingId === todo.id;
@@ -30,12 +37,12 @@ const Todo = (props) => {
       removeTodo(todo.id);
       return;
     }
-    onEditTodo(
+    updateOneTodo(
       {
         ...todo,
         text,
       },
-      index
+      index,"edit"
     );
   };
   return (
@@ -51,12 +58,28 @@ const Todo = (props) => {
             type="checkbox"
             checked={todo.isCompleted}
             name="name"
-            onChange={() => markCompletedTodo(todo.id)}
+            onChange={() => {
+              let promiseComplete = new Promise((resolve, reject) => {
+                updateOneTodo(
+                  { ...todo, isCompleted: !todo.isCompleted },
+                  index,
+                  "markCompletedTodo"
+                );
+              });
+              promiseComplete.then((res) => {
+                markCompletedTodo(todo.id);
+              });
+            }}
           />
           <label onDoubleClick={() => getTodoEditingId(todo.id)}>
             {todo.text}
           </label>
-          <button className="destroy" onClick={() => removeTodo(todo.id)} />
+          <button
+            className="destroy"
+            onClick={() => {
+              deleteOneTodo(todo);
+            }}
+          />
         </div>
       ) : (
         <input
@@ -68,6 +91,7 @@ const Todo = (props) => {
           onKeyPress={(e) => {
             if (e.key === "Enter") {
               editTodo();
+               deleteOneTodo(todo);
             }
           }}
           onBlur={(e) => editTodo()}
@@ -84,11 +108,17 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = {
-  getTodoEditingId,
-  onEditTodo,
-  markCompletedTodo,
-  removeTodo,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getTodoEditingId: (id) => dispatch(getTodoEditingId(id)),
+    onEditTodo: (todo, id) => dispatch(onEditTodo(todo, id)),
+    markCompletedTodo: (id) => dispatch(markCompletedTodo(id)),
+    removeTodo: (id) => dispatch(removeTodo(id)),
+    updateOneTodo: (todo, index, type) => dispatch(updateOneTodo(todo, index, type)),
+    getTodo: () => dispatch(getTodo()),
+    deleteOneTodo: (todo) => dispatch(deleteOneTodo(todo)),
+  };
 };
 
 export default memo(connect(mapStateToProps, mapDispatchToProps)(Todo));
+  

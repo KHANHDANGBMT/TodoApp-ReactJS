@@ -1,17 +1,17 @@
 import React, { memo, useState } from 'react';
 import { connect } from 'react-redux';
-import { addTodo } from '../../store/actions';
+import { addOneTodo } from "../../store/actions";
 
 const Header = props => {
     const [text, setText] = useState('');
-    const { addTodo } = props;
+    const { addOneTodo } = props;
     const onAddTodo = (e = {}) => {
         if (e.key === 'Enter' && text.trim()) {
             const newText = text.trim();
-            addTodo({
-                id: new Date().valueOf(),
-                text: newText,
-                isCompleted: false
+            addOneTodo({
+              id: new Date().valueOf(),
+              text: newText,
+              isCompleted: false,
             });
             setText("");
         }
@@ -29,8 +29,9 @@ const Header = props => {
         </header>
     );
 }
-const mapDispatchToProps = {
-    addTodo
+const mapDispatchToProps = dispatch=>{
+    return {
+      addOneTodo: (todo)=>{dispatch(addOneTodo(todo));}
+    };
 }
-export default memo(connect(null, mapDispatchToProps)(Header)); //memo quản lý việc render, giống pureComponent hoặc shouldComponentUpdate
-// có thể sử dụng function làm đối số thứ 2 để quản lý việc update
+export default memo(connect(null, mapDispatchToProps)(Header)); 

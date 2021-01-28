@@ -7,10 +7,11 @@ import {
   REMOVE_TODO,
   SET_STATUS_FILTER,
   CLEAR_COMPLETED,
+  GET_TODO,
 } from "../actions/index";
 import * as Helper from "../../Helper/Helper";
 
-import * as Actions from '../../Helper/Actions/TodoHelper';
+import * as Actions from "../../Helper/Actions/TodoHelper";
 
 const INITIAL_STATE = {
   todoList: [],
@@ -23,11 +24,13 @@ const todoReducers = (state = INITIAL_STATE, action) => {
   const { todoList, isCheckedAll } = state;
   const list = JSON.parse(JSON.stringify(todoList));
   switch (action.type) {
+
     case ADD_TODO:
       return Object.assign({}, state, {
         todoList: [...list, action.todo],
       });
-    case ON_EDIT_TODO:
+    
+    case ON_EDIT_TODO: {
       if (action.index >= 0) {
         list.splice(action.index, 1, action.todo);
       }
@@ -35,11 +38,13 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         todoList: list,
         todoEditingId: "",
       });
+    }
+      
     case GET_TODO_EDITING_ID:
       return Object.assign({}, state, {
         todoEditingId: action.id,
       });
-    
+
     case MARK_COMPLETED_TODO:
       const updateTodoList = list.map((todo) =>
         todo.id === action.id
@@ -50,7 +55,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         todoList: updateTodoList,
         isCheckedAll: !Helper.isNotCheckedAll(updateTodoList),
       });
-    
+
     case CHECK_ALL_TODOS:
       return Object.assign({}, state, {
         todoList: todoList.map((todo) => ({
@@ -59,7 +64,7 @@ const todoReducers = (state = INITIAL_STATE, action) => {
         })),
         isCheckedAll: !isCheckedAll,
       });
-    
+
     case REMOVE_TODO:
       return Object.assign({}, state, {
         todoList: Helper.filterTodosByStatus(
@@ -67,19 +72,27 @@ const todoReducers = (state = INITIAL_STATE, action) => {
           Actions.actions.remove,
           action.id
         ),
-        isCheckedAll: todoList.length >= 1 ? false : true
+        isCheckedAll: todoList.length >= 1 ? false : true,
       });
-    
+
     case SET_STATUS_FILTER:
       return Object.assign({}, state, {
         status: action.status,
       });
-    
+
     case CLEAR_COMPLETED:
       return Object.assign({}, state, {
         todoList: Helper.filterTodosByStatus(list, Actions.actions.active),
-        isCheckedAll: false
+        isCheckedAll: false,
       });
+    
+    case GET_TODO: {
+      return {
+        ...state,
+        todoList: action.todoList,
+        isCheckedAll: !Helper.isNotCheckedAll(action.todoList),
+      };
+    }
     default:
       return state;
   }

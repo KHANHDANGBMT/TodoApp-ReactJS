@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { connect } from "react-redux";
 
 // Components
@@ -10,8 +10,12 @@ import Option from "./Components/Option/Option";
 import "./Css/Todo.css";
 import "./App.css";
 
-const App = (props) => {
-  const { todoList } = props;
+import {getTodo} from './store/actions'
+
+const App = ({ getTodo, todoList }) => {
+  useEffect(() => {
+    getTodo();
+  }, []);
   const showOption = todoList.length !== 0 ? <Option /> : "";
   return (
     <div className="todoapp">
@@ -26,4 +30,9 @@ const mapStateToProps = (state) => {
     todoList: state.todos.todoList,
   };
 };
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    getTodo: ()=>dispatch(getTodo())
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
