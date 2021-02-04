@@ -11,7 +11,7 @@ export const CLEAR_COMPLETED = "CLEAR_COMPLETED";
 export const GET_TODO = "GET_TODO";
 export const UPDATE_ONE_TODO = "UPDATE_ONE_TODO";
 
-const baseUrl = "http://localhost:5123/todo";
+const baseUrl = "https://app-todo-server.herokuapp.com/todo";
 
 export const addTodo = (todo = {}) => {
   return {

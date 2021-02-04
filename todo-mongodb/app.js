@@ -5,6 +5,9 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const db = require("./db");
 const mongoose = require("mongoose");
+var expressSwagger = require("express");
+var argv = require("minimist")(process.argv.slice(2));
+var bodyParser = require("body-parser");
 const todoRoutes = require("./todo.routes");
 
 mongoose.Promise = global.Promise;
@@ -18,16 +21,57 @@ mongoose
   });
 const app = express();
 
+//config swagger after initial app
+var subpath = express();
+
+app.use(bodyParser());
+app.use("/v1", subpath);
+
+var swagger = require("swagger-node-express").createNew(subpath);
+app.use(express.static("dist"));
+swagger.setApiInfo({
+  title: "example API",
+  description: "API to do something, manage something...",
+  termsOfServiceUrl: "",
+  contact: "yourname@something.com",
+  license: "",
+  licenseUrl: "",
+});
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/dist/index.html");
+});
+swagger.configureSwaggerPaths("", "api-docs", "");
+	// Configure the API domain
+	var domain = 'localhost';
+	if(argv.domain !== undefined)
+	    domain = argv.domain;
+	else
+	    console.log('No --domain=xxx specified, taking default hostname "localhost".')
+
+	// Configure the API port
+	var port = 3123;
+	if(argv.port !== undefined)
+	    port = argv.port;
+	else
+	    console.log('No --port=xxx specified, taking default port ' + port + '.')
+
+	// Set and display the application URL
+	var applicationUrl = 'http://' + domain + ':' + port;
+	console.log('snapJob API running on ' + applicationUrl);
+
+
+	swagger.configure(applicationUrl, '1.0.0');
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-app.set("port", 5123);
+app.set("port", process.env.PORT);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+// set route for todo
 app.use("/todo", todoRoutes);
 
 // catch 404 and forward to error handler
@@ -46,6 +90,7 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-app.listen(app.get("port"), function () {
-  console.log("Server is running on port: http://localhost:" + app.get("port"));
-});
+// app.listen(app.get("port"), function () {
+//   console.log("Server is running on port: http://localhost:" + app.get("port"));
+// });
+app.listen(process.env.PORT || 3123);
