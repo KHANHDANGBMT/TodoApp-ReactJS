@@ -1,0 +1,257 @@
+swagger: "2.0"
+info:
+  description: |
+    This is a api for Todo list server.
+  version: 1.0.0
+  title: Todo list
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: khanhdangbmt@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: app-todo-server.herokuapp.com/
+basePath: /todo
+tags:
+  - name: todo
+    description: Everything about todo-list
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+schemes:
+  - https
+paths:
+  /get:
+    get:
+      tags:
+        - "todo"
+      summary: "Get list todo"
+      description: Multi todo item can be return
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        200:
+          description: success get
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/get"
+  /add:
+    post:
+      tags:
+        - todo
+      summary: Create todo
+      description: Add new todo
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Todo content
+          description: todo object that needs to be added
+          required: true
+          schema:
+            $ref: "#/definitions/add"
+      responses:
+        200:
+          description: todo added successfully
+          schema:
+            $ref: "#/definitions/addSuccess"
+        400:
+          description: unable to save to db
+  /update:
+    put:
+      tags:
+        - todo
+      summary: Update todo
+      description: Add new todo
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Todo content
+          description: todo object that needs to be added
+          required: true
+          schema:
+            $ref: "#/definitions/update"
+      responses:
+        200:
+          description: update success
+          schema:
+            $ref: "#/definitions/updateSuccess"
+      deprecated: false
+
+  /clearCompleted:
+    delete:
+      tags:
+        - todo
+      summary: Remove completed todo
+      description: Clear completed todo
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        200:
+          description: Todo deleted successfully
+          schema:
+            $ref: "#/definitions/deleteSuccess"
+      deprecated: false
+
+  /updateMany:
+    post:
+      tags:
+        - todo
+      summary: Update many status todo
+      description: Update isCompleted of all todo
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Todo content
+          description: list todo object that needs to be update
+          schema:
+            type: object
+            $ref: "#/definitions/updateMany"
+      responses:
+        200:
+          description: Multiple todo updated successfully
+          schema:
+            $ref: '#/definitions/updateManySuccess'
+      deprecated: false
+  /delete:
+    delete:
+      tags:
+        - todo
+      summary: Delete one todo
+      description: Delete one todo
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Todo content
+          description: Delete one todo
+          schema: 
+            $ref: "#/definitions/delete"
+      responses:
+        200:
+          description: Todo deleted successfully
+          schema:
+            $ref: '#/definitions/deleteOneSuccess'
+      deprecated: false
+
+definitions:
+  get:
+    required:
+      - _id
+      - id
+      - isCompleted
+      - text
+    properties:
+      _id:
+        type: string
+        format: int64
+        example: 601a28e5e891ab00046e4f5f
+      id:
+        type: number
+        example: 1
+      isCompleted:
+        type: boolean
+        example: true
+      text:
+        type: string
+        example: create new todos
+  add:
+    type: object
+    required:
+      - id
+      - text
+      - isCompleted
+    properties:
+      id:
+        type: number
+        example: 2
+      text:
+        type: string
+        example: clean code
+      isCompleted:
+        type: boolean
+        example: false
+  addSuccess:
+    type: object
+    required:
+      - status
+    properties:
+      status:
+        type: string
+        example: add success
+  update:
+    type: object
+    required:
+      - id
+      - _id
+      - text
+      - isCompleted
+    properties:
+      id:
+        type: number
+        example: 2
+      text:
+        type: string
+        example: clean code
+      isCompleted:
+        type: boolean
+        example: false
+      _id:
+        type: string
+        example: 601a28e5e891ab00046e4f5f
+  updateSuccess:
+    type: object
+    required:
+      - status
+    properties:
+      status:
+        type: string
+        example: update success
+  deleteSuccess:
+    type: object
+    properties:
+      status:
+        type: string
+        example: delete completed success
+  updateMany:
+    type: object
+    required:
+      - isCompleted
+    properties:
+      isCompleted:
+        type: boolean
+        example: false
+  updateManySuccess:
+    type: object
+    properties: 
+      status:
+        type: string
+        example: update many success
+  delete: 
+    type: object
+    required:
+      - id
+    properties: 
+      id: 
+        type: number
+        example: 3
+  deleteOneSuccess:
+    type: object
+    required:
+      - status
+    properties: 
+      status:
+        type: string
+        example: delete success

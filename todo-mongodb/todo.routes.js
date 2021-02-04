@@ -6,7 +6,7 @@ let Todo = require("./todo.modal");
 todoRoutes.route("/get").get(function (req, res) {
   Todo.find(function (err, todo) {
     if (err) {
-      console.log(err);
+      throw err
     } else {
       res.json(todo);
     }
