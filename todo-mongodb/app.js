@@ -5,10 +5,10 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const db = require("./db");
 const mongoose = require("mongoose");
-var expressSwagger = require("express");
 var argv = require("minimist")(process.argv.slice(2));
 var bodyParser = require("body-parser");
 const todoRoutes = require("./todo.routes");
+var cors = require("cors");
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -23,9 +23,10 @@ const app = express();
 
 //config swagger after initial app
 var subpath = express();
-
 app.use(bodyParser());
 app.use("/v1", subpath);
+// cors
+app.use(cors());
 
 var swagger = require("swagger-node-express").createNew(subpath);
 app.use(express.static("dist"));

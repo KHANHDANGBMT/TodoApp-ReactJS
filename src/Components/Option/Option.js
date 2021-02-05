@@ -37,6 +37,7 @@ const todoOption = (props) => {
       link: "completed",
     },
   ];
+ 
   return (
     <div className="footer">
       <span className="todo-count">
@@ -50,7 +51,7 @@ const todoOption = (props) => {
           <Button key={`btn${btn.title}`} {...btn} />
         ))}
       </ul>
-      {isCheckedAll || status === Actions.actions.completed ? (
+      {Helper.isExitedComplete(todoList) || isCheckedAll ? (
         <button
           className="clear-completed"
           onClick={() => clearCompletedTodo()}
