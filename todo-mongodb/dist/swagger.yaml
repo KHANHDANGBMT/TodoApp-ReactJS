@@ -10,8 +10,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-# host: app-todo-server.herokuapp.com/
-basePath: /todo
+basePath: /todo-list
 tags:
   - name: todo
     description: Everything about todo-list
@@ -19,13 +18,14 @@ tags:
       description: Find out more
       url: http://swagger.io
 schemes:
+  - http
   - https
 paths:
-  /get:
+  /:
     get:
       tags:
-        - "todo"
-      summary: "Get list todo"
+        - todo-list
+      summary: "Get todo list"
       description: Multi todo item can be return
       produces:
         - application/json
@@ -37,7 +37,44 @@ paths:
             type: array
             items:
               $ref: "#/definitions/get"
-  /add:
+  /completed:
+    delete:
+      tags:
+        - todo-list
+      summary: Remove completed todo
+      description: Clear completed todo
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        200:
+          description: Todo deleted successfully
+          schema:
+            $ref: "#/definitions/deleteSuccess"
+      deprecated: false
+  /toggle-all:
+    post:
+      tags:
+        - todo-list
+      summary: Update many status todo
+      description: Update isCompleted of all todo
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Todo content
+          description: list todo object that needs to be update
+          schema:
+            type: object
+            $ref: "#/definitions/updateMany"
+      responses:
+        200:
+          description: Multiple todo updated successfully
+          schema:
+            $ref: "#/definitions/updateManySuccess"
+      deprecated: false
+  /todo:
     post:
       tags:
         - todo
@@ -57,13 +94,10 @@ paths:
           schema:
             $ref: "#/definitions/add"
       responses:
-        200:
+        201:
           description: todo added successfully
           schema:
             $ref: "#/definitions/addSuccess"
-        400:
-          description: unable to save to db
-  /update:
     put:
       tags:
         - todo
@@ -84,47 +118,11 @@ paths:
           description: update success
           schema:
             $ref: "#/definitions/updateSuccess"
-      deprecated: false
-
-  /clearCompleted:
-    delete:
-      tags:
-        - todo
-      summary: Remove completed todo
-      description: Clear completed todo
-      produces:
-        - application/json
-        - application/xml
-      responses:
-        200:
-          description: Todo deleted successfully
+        420:
+          description: Id todo is not exited
           schema:
-            $ref: "#/definitions/deleteSuccess"
+            $ref: "#/definitions/idTodoIsNotExited"
       deprecated: false
-
-  /updateMany:
-    post:
-      tags:
-        - todo
-      summary: Update many status todo
-      description: Update isCompleted of all todo
-      produces:
-        - application/json
-        - application/xml
-      parameters:
-        - in: body
-          name: Todo content
-          description: list todo object that needs to be update
-          schema:
-            type: object
-            $ref: "#/definitions/updateMany"
-      responses:
-        200:
-          description: Multiple todo updated successfully
-          schema:
-            $ref: '#/definitions/updateManySuccess'
-      deprecated: false
-  /delete:
     delete:
       tags:
         - todo
@@ -137,20 +135,19 @@ paths:
         - in: body
           name: Todo content
           description: Delete one todo
-          schema: 
+          schema:
             $ref: "#/definitions/delete"
       responses:
         200:
           description: Todo deleted successfully
           schema:
-            $ref: '#/definitions/deleteOneSuccess'
+            $ref: "#/definitions/deleteOneSuccess"
       deprecated: false
 
 definitions:
   get:
     required:
       - _id
-      - id
       - isCompleted
       - text
     properties:
@@ -158,9 +155,6 @@ definitions:
         type: string
         format: int64
         example: 601a28e5e891ab00046e4f5f
-      id:
-        type: number
-        example: 1
       isCompleted:
         type: boolean
         example: true
@@ -170,13 +164,9 @@ definitions:
   add:
     type: object
     required:
-      - id
       - text
       - isCompleted
     properties:
-      id:
-        type: number
-        example: 2
       text:
         type: string
         example: clean code
@@ -194,23 +184,19 @@ definitions:
   update:
     type: object
     required:
-      - id
       - _id
       - text
       - isCompleted
     properties:
-      id:
-        type: number
-        example: 2
+      _id:
+        type: string
+        example: 601a28e5e891ab00046e4f5f
       text:
         type: string
         example: clean code
       isCompleted:
         type: boolean
         example: false
-      _id:
-        type: string
-        example: 601a28e5e891ab00046e4f5f
   updateSuccess:
     type: object
     required:
@@ -219,6 +205,13 @@ definitions:
       status:
         type: string
         example: update success
+  idTodoIsNotExited:
+    required:
+      - status
+    properties:
+      status:
+        type: string
+        example: Id todo is not exited
   deleteSuccess:
     type: object
     properties:
@@ -235,23 +228,23 @@ definitions:
         example: false
   updateManySuccess:
     type: object
-    properties: 
+    properties:
       status:
         type: string
         example: update many success
-  delete: 
+  delete:
     type: object
     required:
       - id
-    properties: 
-      id: 
+    properties:
+      id:
         type: number
         example: 3
   deleteOneSuccess:
     type: object
     required:
       - status
-    properties: 
+    properties:
       status:
         type: string
         example: delete success

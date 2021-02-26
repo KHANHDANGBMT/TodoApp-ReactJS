@@ -12,6 +12,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "http-status": "^1.5.0",
     "jade": "~1.11.0",
     "minimist": "*",
     "mongodb": "^3.6.3",
